@@ -1,248 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Groq TTS Pro</title>
+  <meta charset="UTF-8">
+  <title>Sudarshana AI</title>
   <style>
     body {
       margin: 0;
-      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #0d0d0d, #1a001a);
+      color: #fff;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      background: linear-gradient(135deg, #0f0f0f, #1b0033, #220044);
-      font-family: Arial, Helvetica, sans-serif;
-      font-weight: bold;
-      color: #eee;
-      background-size: 400% 400%;
-      animation: gradientFlow 15s ease infinite;
-    }
-    @keyframes gradientFlow {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
-    .container {
-      backdrop-filter: blur(20px) saturate(150%);
-      background: rgba(30, 0, 50, 0.6);
-      border-radius: 20px;
-      border: 1px solid rgba(200, 100, 255, 0.3);
-      padding: 30px;
-      width: 90%;
-      max-width: 800px;
-      box-shadow: 0 0 40px rgba(180, 60, 255, 0.4);
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 10px;
     }
     h1 {
-      text-align: center;
-      font-size: 2.4em;
-      margin-bottom: 25px;
-      color: #d9b3ff;
-      text-shadow: 0 0 20px #a64dff, 0 0 40px #7a00ff;
+      font-size: 48px;
+      color: #d580ff;
+      margin-bottom: 6px;
+      text-shadow: 0 0 20px #9d4edd;
     }
-
-    /* --- Custom Dropdown --- */
-    .dropdown {
-      position: relative;
-      width: 100%;
-      margin-bottom: 18px;
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #bbb;
+      margin-bottom: 30px;
     }
-    .dropdown-selected {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(200, 100, 255, 0.6);
-      border-radius: 12px;
-      padding: 12px;
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      width: 90%;
+      max-width: 500px;
+      align-items: center;
+    }
+    .option {
+      background: rgba(50, 0, 70, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      color: #fff;
-      font-weight: bold;
-      transition: all 0.3s ease;
+      transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 25px rgba(180, 0, 255, 0.5);
     }
-    .dropdown-selected:hover {
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 15px rgba(200, 60, 255, 0.7);
+    .option:hover {
+      transform: scale(1.05);
+      background: rgba(110, 0, 180, 0.95);
+      box-shadow: 0 0 35px rgba(200, 0, 255, 0.7);
     }
-    .dropdown-options {
-      position: absolute;
-      top: 110%;
-      left: 0;
-      width: 100%;
-      background: #1a0033;
-      border: 2px solid rgba(200, 100, 255, 0.6);
-      border-radius: 12px;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: all 0.4s ease;
-      z-index: 10;
+    .icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 12px #b300ff;
     }
-    .dropdown-options.show {
-      max-height: 400px;
-      opacity: 1;
-    }
-    .dropdown-option {
-      padding: 12px;
-      cursor: pointer;
-      color: #fff;
-      transition: all 0.2s;
-    }
-    .dropdown-option:hover {
-      background: linear-gradient(135deg, #7a00ff, #ff33cc);
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      outline: none;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      font-weight: bold;
-      margin-bottom: 18px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      background: linear-gradient(135deg, #7a00ff, #ff33cc);
-      color: #fff;
-      letter-spacing: 1px;
-      transition: all 0.25s ease;
-      margin-bottom: 15px;
-    }
-    button:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 0 20px rgba(200, 60, 255, 0.8);
-    }
-    #status {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 1rem;
-      color: #e6ccff;
-    }
-    audio {
-      margin-top: 20px;
-      width: 100%;
-      display: none;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(160, 60, 255, 0.5);
-    }
-    #downloadLink {
-      display: none;
-      margin-top: 15px;
-      text-align: center;
-      color: #ffb3ff;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 1.05rem;
-    }
-    #downloadLink:hover {
-      text-decoration: underline;
-      color: #ffffff;
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 36px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      .option {
+        padding: 20px;
+        font-size: 18px;
+      }
+      .icon {
+        font-size: 36px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Sudarshana AI</h1></h1>
+  <h1>✨ Sudarshana AI</h1>
+  <h2>Found By Himnish Verma</h2>
 
-    <!-- Custom Dropdown -->
-    <div class="dropdown" id="voiceDropdown">
-      <div class="dropdown-selected" id="selectedVoice">Fritz-PlayAI</div>
-      <div class="dropdown-options" id="voiceOptions"></div>
+  <div class="options">
+    <div class="option" onclick="location.href='https://himnishisop.github.io/image-generator'">
+      <div class="icon">🖼️</div>
+      <span>Image Generator</span>
     </div>
-
-    <textarea id="text">I love building and shipping new features for our users!</textarea>
-    <button id="generate">Generate Speech</button>
-    <div id="status"></div>
-
-    <audio id="player" controls></audio>
-    <a id="downloadLink">⬇ Download Audio</a>
+    <div class="option" onclick="location.href='https://himnishisop.github.io/chat'">
+      <div class="icon">🤖</div>
+      <span>Chat with Sudarshana</span>
+    </div>
+    <div class="option" onclick="location.href='https://himnishisop.github.io/transcription/'">
+      <div class="icon">🎤</div>
+      <span>Speech to Text</span>
+    </div>
+    <div class="option" onclick="location.href='https://himnishisop.github.io/text-to-speech/'">
+      <div class="icon">🔊</div>
+      <span>Text to Speech</span>
+    </div>
   </div>
-
-<script>
-const endpoint = "https://api.groq.com/openai/v1/audio/speech";
-const apiKey = "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"; 
-
-// Voice list
-const voices = [
-  "Arista-PlayAI","Atlas-PlayAI","Basil-PlayAI","Briggs-PlayAI","Calum-PlayAI",
-  "Celeste-PlayAI","Cheyenne-PlayAI","Chip-PlayAI","Cillian-PlayAI","Deedee-PlayAI",
-  "Fritz-PlayAI","Gail-PlayAI","Indigo-PlayAI","Mamaw-PlayAI","Mason-PlayAI",
-  "Mikail-PlayAI","Mitch-PlayAI","Quinn-PlayAI","Thunder-PlayAI"
-];
-
-// Build dropdown
-const optionsContainer = document.getElementById("voiceOptions");
-voices.forEach(v => {
-  const opt = document.createElement("div");
-  opt.className = "dropdown-option";
-  opt.textContent = v;
-  opt.onclick = () => {
-    document.getElementById("selectedVoice").textContent = v;
-    optionsContainer.classList.remove("show");
-  };
-  optionsContainer.appendChild(opt);
-});
-
-// Toggle dropdown
-document.getElementById("selectedVoice").onclick = () => {
-  optionsContainer.classList.toggle("show");
-};
-
-document.getElementById('generate').onclick = async () => {
-  const text = document.getElementById('text').value;
-  const voice = document.getElementById('selectedVoice').textContent;
-  const status = document.getElementById('status');
-  status.textContent = "⚡ Generating speech...";
-
-  try {
-    const body = {
-      model: "playai-tts",
-      voice: voice,
-      input: text,
-      response_format: "wav"
-    };
-
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error("API Error: " + errText);
-    }
-
-    const arrayBuffer = await res.arrayBuffer();
-    const blob = new Blob([arrayBuffer], { type: "audio/wav" });
-    const url = URL.createObjectURL(blob);
-
-    const player = document.getElementById('player');
-    player.style.display = "block";
-    player.src = url;
-    player.play().catch(()=>{});
-
-    const dl = document.getElementById('downloadLink');
-    dl.href = url;
-    dl.download = "speech.wav";
-    dl.style.display = "block";
-
-    status.textContent = "✅ Speech ready!";
-  } catch (err) {
-    console.error(err);
-    status.textContent = "❌ Error: " + err.message;
-  }
-};
-</script>
 </body>
 </html>
